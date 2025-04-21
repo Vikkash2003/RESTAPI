@@ -1,4 +1,4 @@
-package models;
+package project.restapi.models;
 
 import java.util.Date;
 
@@ -10,6 +10,9 @@ public class Book {
     private Date publishedYear;
     private Double price;
     private int stock;
+
+    public Book(){
+    }
 
     public Book(int id, String title, String author, String isbn, Date publishedYear, Double price, int stock) {
         this.id = id;
@@ -75,5 +78,13 @@ public class Book {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+    @Override
+    public String toString() {
+        return String.format(
+                "{\"id\":%d,\"title\":\"%s\",\"author\":\"%s\",\"isbn\":\"%s\"," +
+                        "\"publishedYear\":\"%s\",\"price\":%.2f,\"stock\":%d}",
+                id, title, author, isbn, publishedYear, price, stock
+        );
     }
 }

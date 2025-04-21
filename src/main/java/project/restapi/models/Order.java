@@ -1,4 +1,4 @@
-package models;
+package project.restapi.models;
 
 import java.util.List;
 

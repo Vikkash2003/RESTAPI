@@ -1,4 +1,4 @@
-package models;
+package project.restapi.models;
 
 public class Customer {
     private int id;
