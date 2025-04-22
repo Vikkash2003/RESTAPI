@@ -37,6 +37,21 @@ public class BookResource {
         return "[]";
     }
 
+    //getting book by id
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getBookById(@PathParam("id") int id) {
+        Book book = DataStore.book.get(id);
+        if (book != null) {
+            return Response.ok(book).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Book not found with ID: " + id)
+                    .build();
+        }
+    }
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -67,21 +82,6 @@ public class BookResource {
         }
     }
 
-
-    //getting book by id
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getBookById(@PathParam("id") int id) {
-        Book book = DataStore.book.get(id);
-        if (book != null) {
-            return Response.ok(book).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Book not found with ID: " + id)
-                    .build();
-        }
-    }
 
 
 

@@ -11,6 +11,7 @@ public class Book {
     private Double price;
     private int stock;
 
+    private int authorId;
     public Book(){
     }
 
@@ -79,11 +80,20 @@ public class Book {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
     @Override
     public String toString() {
         return String.format(
                 "{\"id\":%d,\"title\":\"%s\",\"author\":\"%s\",\"isbn\":\"%s\"," +
-                        "\"publishedYear\":\"%s\",\"price\":%.2f,\"stock\":%d}",
+                        "\"publishedYear\":\"%s\",\"price\":%.2f,\"stock\":%d",
                 id, title, author, isbn, publishedYear, price, stock
         );
     }
