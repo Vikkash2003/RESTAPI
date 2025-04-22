@@ -7,15 +7,15 @@ public class Book {
     private String title;
     private String author;
     private String isbn;
-    private Date publishedYear;
+    private int publishedYear;
     private Double price;
     private int stock;
 
-    private int authorId;
+
     public Book(){
     }
 
-    public Book(int id, String title, String author, String isbn, Date publishedYear, Double price, int stock) {
+    public Book(int id, String title, String author, String isbn, int publishedYear, Double price, int stock) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -57,11 +57,11 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Date getPublishedYear() {
+    public int getPublishedYear() {
         return publishedYear;
     }
 
-    public void setPublishedYear(Date publishedYear) {
+    public void setPublishedYear(int publishedYear) {
         this.publishedYear = publishedYear;
     }
 
@@ -81,19 +81,11 @@ public class Book {
         this.stock = stock;
     }
 
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
-
     @Override
     public String toString() {
         return String.format(
                 "{\"id\":%d,\"title\":\"%s\",\"author\":\"%s\",\"isbn\":\"%s\"," +
-                        "\"publishedYear\":\"%s\",\"price\":%.2f,\"stock\":%d",
+                        "\"publishedYear\":\"%s\",\"price\":%.2f,\"stock\":%d}",
                 id, title, author, isbn, publishedYear, price, stock
         );
     }

@@ -12,13 +12,24 @@ import project.restapi.utills.DataStore;
 @Path("/author")
 public class AuthorResource {
 
-    //add an author
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addAuthor(Author author) {
+        // Check if author with same name exists
+        for (Author existingAuthor : DataStore.author.values()) {
+            if (existingAuthor.getName().equalsIgnoreCase(author.getName())) {
+                // Return existing author's ID
+                return Response.status(Response.Status.OK)
+                        .entity("Author already exists with ID: " + existingAuthor.getId())
+                        .build();
+            }
+        }
+
+        // Create new author with sequential ID
         author.setId(DataStore.author.size() + 1);
-        DataStore.author.put(author.getId(),author);
+        DataStore.author.put(author.getId(), author);
+
         return Response.status(Response.Status.CREATED)
                 .entity(author)
                 .build();
@@ -94,21 +105,20 @@ public class AuthorResource {
         Author author = DataStore.author.get(authorId);
         if (author != null) {
             StringBuilder books = new StringBuilder("[");
-            boolean hasBooks = false;
+            boolean first = true;
 
             for (Book book : DataStore.book.values()) {
-                if (book.getAuthor().equalsIgnoreCase(author.getName()) &&
-                        book.getTitle().equalsIgnoreCase(author.getBookName())) {
-                    if (hasBooks) {
+                if (book.getAuthor().equalsIgnoreCase(author.getName())) {
+                    if (!first) {
                         books.append(",");
                     }
                     books.append(book.toString());
-                    hasBooks = true;
+                    first = false;
                 }
             }
             books.append("]");
 
-            return Response.ok(hasBooks ? books.toString() : "[]").build();
+            return Response.ok(books.toString()).build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)

@@ -30,7 +30,7 @@ public class BookResource {
             for (Book book : DataStore.book.values()) {
                 books.append(book.toString()).append(",");
             }
-            books.deleteCharAt(books.length() - 1); // Remove the last comma
+            books.deleteCharAt(books.length() - 1);
             books.append("]");
             return books.toString();
         }
