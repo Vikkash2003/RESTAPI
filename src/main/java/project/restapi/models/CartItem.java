@@ -1,19 +1,21 @@
 package project.restapi.models;
 
 public class CartItem {
-    private int BookId;
+    private int bookId;
     private int quantity;
 
-    public CartItem(int BookId, int quantity) {
-        this.BookId = BookId;
+    public CartItem() {
+    }
+    public CartItem(int bookId, int quantity) {
+        this.bookId = bookId;
         this.quantity = quantity;
     }
     public int getBookId() {
-        return BookId;
+        return bookId;
     }
 
-    public void setBookId(int BookId) {
-        this.BookId = BookId;
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
     }
     public int getQuantity() {
         return quantity;
@@ -22,5 +24,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-
+    @Override
+    public String toString() {
+        return String.format(
+                "{\"bookId\":%d,\"quantity\":%d}",
+                bookId, quantity
+        );
+    }
 }

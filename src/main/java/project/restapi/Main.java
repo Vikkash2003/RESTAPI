@@ -5,6 +5,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import project.restapi.resourses.AuthorResource;
 import project.restapi.resourses.BookResource;
+import project.restapi.resourses.CartResource;
 import project.restapi.resourses.CustomerResource;
 
 
@@ -20,6 +21,7 @@ public class Main {
                 .register(BookResource.class)
                 .register(AuthorResource.class)
                 .register(CustomerResource.class)
+                .register(CartResource.class)
                 .register(org.glassfish.jersey.jackson.JacksonFeature.class);
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }

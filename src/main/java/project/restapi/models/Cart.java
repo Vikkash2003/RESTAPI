@@ -6,6 +6,7 @@ public class Cart {
     private int customerId;
     private List<CartItem> cartItems;
 
+    public Cart() {}
     public Cart(int customerId, List<CartItem> cartItems) {
         this.customerId = customerId;
         this.cartItems = cartItems;
@@ -22,5 +23,20 @@ public class Cart {
     }
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
+    }
+    // In Cart.java
+    @Override
+    public String toString() {
+        StringBuilder cartItems = new StringBuilder();
+        for (int i = 0; i < this.cartItems.size(); i++) {
+            cartItems.append(this.cartItems.get(i).toString());
+            if (i < this.cartItems.size() - 1) {
+                cartItems.append(",");
+            }
+        }
+        return String.format(
+                "{\"customerId\":%d,\"cartItems\":[%s]}",
+                customerId, cartItems.toString()
+        );
     }
 }
