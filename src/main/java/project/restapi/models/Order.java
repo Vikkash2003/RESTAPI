@@ -3,14 +3,17 @@ package project.restapi.models;
 import java.util.List;
 
 public class Order {
-    private int id;
+    private int orderId;
     private int customerId;
     private List<OrderItem> orderItems;
     private String orderDate;
     private Double totalAmount;
 
-    public Order(int id, int customerId, List<OrderItem> orderItems, String orderDate, Double totalAmount) {
-        this.id = id;
+    public Order(){
+
+    }
+    public Order(int orderId, int customerId, List<OrderItem> orderItems, String orderDate, Double totalAmount) {
+        this.orderId = orderId;
         this.customerId = customerId;
         this.orderItems = orderItems;
         this.orderDate = orderDate;
@@ -18,11 +21,11 @@ public class Order {
     }
 
     public int getId() {
-        return id;
+        return orderId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.orderId = id;
     }
 
     public int getCustomerId() {
@@ -55,5 +58,16 @@ public class Order {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + orderId +
+                ", customerId=" + customerId +
+                ", orderItems=" + orderItems +
+                ", orderDate='" + orderDate + '\'' +
+                ", totalAmount=" + totalAmount +
+                '}';
     }
 }

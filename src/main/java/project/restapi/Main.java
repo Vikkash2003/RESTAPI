@@ -3,10 +3,7 @@ package project.restapi;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-import project.restapi.resourses.AuthorResource;
-import project.restapi.resourses.BookResource;
-import project.restapi.resourses.CartResource;
-import project.restapi.resourses.CustomerResource;
+import project.restapi.resourses.*;
 
 
 import java.io.IOException;
@@ -22,6 +19,7 @@ public class Main {
                 .register(AuthorResource.class)
                 .register(CustomerResource.class)
                 .register(CartResource.class)
+                .register(OrderResource.class)
                 .register(org.glassfish.jersey.jackson.JacksonFeature.class);
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
