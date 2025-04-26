@@ -3,7 +3,12 @@ package project.restapi;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import project.restapi.mapper.AuthorNotFoundExceptionMapper;
+import project.restapi.mapper.BookNotFoundExceptionMapper;
+import project.restapi.mapper.CartNotFoundExceptionMapper;
+import project.restapi.mapper.CustomerNotFoundExceptionMapper;
 import project.restapi.resourses.*;
+import project.restapi.mapper.*;
 
 
 import java.io.IOException;
@@ -14,13 +19,24 @@ public class Main {
 
     public static HttpServer startServer() {
         final ResourceConfig rc = new ResourceConfig()
-                .packages("project.restapi.resourses")
+                .packages("project.restapi.resourses" ,
+                        "project.restapi.mapper")
                 .register(BookResource.class)
                 .register(AuthorResource.class)
                 .register(CustomerResource.class)
                 .register(CartResource.class)
                 .register(OrderResource.class)
+                .register(BookNotFoundExceptionMapper.class)
+                .register(AuthorNotFoundExceptionMapper.class)
+                .register(CustomerNotFoundExceptionMapper.class)
+                .register(CartNotFoundExceptionMapper.class)
+                .register(OutOfStockExceptionMapper.class)
+                .register(EmptyCartExceptionMapper.class)
+                .register(OutOfStockExceptionMapper.class)
+                .register(InvalidInputExceptionMapper.class)
                 .register(org.glassfish.jersey.jackson.JacksonFeature.class);
+        rc.register(org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider.class);
+
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 

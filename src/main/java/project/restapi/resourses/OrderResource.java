@@ -3,6 +3,10 @@ package project.restapi.resourses;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import project.restapi.exceptions.CustomerNotFoundException;
+import project.restapi.exceptions.EmptyCartException;
+import project.restapi.exceptions.InvalidInputException;
+import project.restapi.exceptions.OrderNotFoundException;
 import project.restapi.models.*;
 import project.restapi.utills.DataStore;
 
@@ -20,19 +24,18 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response placeOrder(@PathParam("customerId") int customerId) {
-        // Validate customer
-        if (!DataStore.customer.containsKey(customerId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + customerId)
-                    .build();
+
+        if (customerId <= 0) {
+            throw new InvalidInputException("Invalid customer ID");
         }
 
-        // Get cart
+        if (!DataStore.customer.containsKey(customerId)) {
+            throw new CustomerNotFoundException(customerId);
+        }
+
         Cart cart = DataStore.cart.get(customerId);
         if (cart == null || cart.getCartItems().isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Cart is empty")
-                    .build();
+            throw new EmptyCartException("Cart is empty");
         }
 
         // Validate stock and calculate total
@@ -87,9 +90,7 @@ public class OrderResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCustomerOrders(@PathParam("customerId") int customerId) {
         if (!DataStore.customer.containsKey(customerId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + customerId)
-                    .build();
+            throw new CustomerNotFoundException(customerId);
         }
 
         List<Order> orders = DataStore.order.getOrDefault(customerId, new ArrayList<>());
@@ -111,9 +112,7 @@ public class OrderResource {
     public Response getOrder(@PathParam("customerId") int customerId,
                              @PathParam("orderId") int orderId) {
         if (!DataStore.customer.containsKey(customerId)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + customerId)
-                    .build();
+            throw new CustomerNotFoundException(customerId);
         }
 
         List<Order> orders = DataStore.order.getOrDefault(customerId, new ArrayList<>());
@@ -121,8 +120,6 @@ public class OrderResource {
                 .filter(order -> order.getId() == orderId)
                 .findFirst()
                 .map(order -> Response.ok(order).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND)
-                        .entity("Order not found with ID: " + orderId)
-                        .build());
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 }

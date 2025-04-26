@@ -3,17 +3,33 @@ package project.restapi.resourses;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import project.restapi.exceptions.CustomerNotFoundException;
+import project.restapi.exceptions.InvalidInputException;
 import project.restapi.models.Customer;
 import project.restapi.utills.DataStore;
+
+import static project.restapi.utills.DataStore.author;
 
 @Path("/customers")
 public class CustomerResource {
 
-    //add new customer
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+
     public Response createCustomer(Customer customer) {
+        if (customer == null) {
+            throw new CustomerNotFoundException("Customer details cannot be empty");
+        }
+
+        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Customer name cannot be empty");
+        }
+
+        if (customer.getEmail() == null || !customer.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new InvalidInputException("Invalid email format");
+        }
+
         int newId = DataStore.customer.size() + 1;
         customer.setId(newId);
         DataStore.customer.put(newId, customer);
@@ -22,60 +38,47 @@ public class CustomerResource {
                 .build();
     }
 
-    //get all customer
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCustomers() {
-        if (DataStore.customer.isEmpty()) {
-            return Response.ok("[]").build();
-        }
-
         return Response.ok(DataStore.customer.values()).build();
     }
 
-    //get customer by Id
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCustomer(@PathParam("id") int id) {
         Customer customer = DataStore.customer.get(id);
-
         if (customer == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + id)
-                    .build();
+            throw new CustomerNotFoundException(id);
         }
-
         return Response.ok(customer).build();
     }
 
-    //update customer
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateCustomer(@PathParam("id") int id, Customer updatedCustomer) {
+        if (updatedCustomer == null) {
+            throw new CustomerNotFoundException("Customer details cannot be empty");
+        }
+
         if (!DataStore.customer.containsKey(id)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + id)
-                    .build();
+            throw new CustomerNotFoundException(id);
         }
 
         updatedCustomer.setId(id);
         DataStore.customer.put(id, updatedCustomer);
-
         return Response.ok(updatedCustomer).build();
     }
 
-    //delete customer by id
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCustomer(@PathParam("id") int id) {
         if (!DataStore.customer.containsKey(id)) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Customer not found with ID: " + id)
-                    .build();
+            throw new CustomerNotFoundException(id);
         }
 
         Customer removedCustomer = DataStore.customer.remove(id);

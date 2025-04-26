@@ -1,6 +1,7 @@
 package project.restapi.models;
 
-import java.util.Date;
+import project.restapi.exceptions.OutOfStockException;
+
 
 public class Book {
     private int id;
@@ -79,6 +80,13 @@ public class Book {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (quantity > this.stock) {
+            throw new OutOfStockException("Insufficient stock. Available: " + this.stock);
+        }
+        this.stock -= quantity;
     }
 
     @Override

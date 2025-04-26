@@ -6,6 +6,8 @@ public class OrderItem {
     private double price;
     private String bookTitle;
 
+    private double total;
+
     public OrderItem() {
     }
 
@@ -47,5 +49,13 @@ public class OrderItem {
 
     public void setBookTitle(String bookTitle) {
         this.bookTitle = bookTitle;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 }
