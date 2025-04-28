@@ -50,6 +50,14 @@ public class AuthorResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAuthors() {
         List<Author> authors = new ArrayList<>(DataStore.author.values());
+        if (authors.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of(
+                            "message", "No authors found in the system",
+                            "statusCode", 404
+                    ))
+                    .build();
+        }
         return Response.ok(authors).build();
     }
 

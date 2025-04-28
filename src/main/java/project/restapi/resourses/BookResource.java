@@ -16,22 +16,38 @@ public class BookResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addBook(Book book) {
-
         if (book == null) {
-            throw new InvalidInputException("Book cannot be null");
-        }
-        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
-            throw new InvalidInputException("Book title cannot be empty");
-        }
-        if (book.getPrice() <= 0) {
-            throw new InvalidInputException("Book price must be greater than 0");
-        }
-        if (book.getStock() < 0) {
-            throw new InvalidInputException("Book stock cannot be negative");
+            throw new InvalidInputException("Book details cannot be empty");
         }
 
-        if (book == null || book.getTitle() == null || book.getTitle().trim().isEmpty()) {
-            throw new BookNotFoundException("Book details cannot be empty");
+        // Title validation
+        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
+            throw new InvalidInputException("Book title is required");
+        }
+
+        // Author validation
+        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
+            throw new InvalidInputException("Author name is required");
+        }
+
+        // ISBN validation
+        if (book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
+            throw new InvalidInputException("ISBN is required");
+        }
+
+        // Published year validation
+        if (book.getPublishedYear() <= 0) {
+            throw new InvalidInputException("Published year is required and must be valid");
+        }
+
+        // Price validation
+        if (book.getPrice() <= 0) {
+            throw new InvalidInputException("Price must be greater than 0");
+        }
+
+        // Stock validation
+        if (book.getStock() < 0) {
+            throw new InvalidInputException("Stock cannot be negative");
         }
 
         book.setId(DataStore.book.size() + 1);
@@ -45,6 +61,14 @@ public class BookResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBooks() {
         List<Book> books = new ArrayList<>(DataStore.book.values());
+        if (books.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of(
+                            "message", "No books found in the system",
+                            "statusCode", 404
+                    ))
+                    .build();
+        }
         return Response.ok(books).build();
     }
 

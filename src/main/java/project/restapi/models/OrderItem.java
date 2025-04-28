@@ -6,7 +6,7 @@ public class OrderItem {
     private double price;
     private String bookTitle;
 
-    private double total;
+    private double subTotal;
 
     public OrderItem() {
     }
@@ -16,6 +16,7 @@ public class OrderItem {
         this.quantity = quantity;
         this.price = price;
         this.bookTitle = bookTitle;
+        this.subTotal = price * quantity;
     }
 
     // Getters and setters
@@ -51,11 +52,11 @@ public class OrderItem {
         this.bookTitle = bookTitle;
     }
 
-    public double getTotal() {
-        return total;
+    public double getSubtotal() {
+        return subTotal;
     }
 
-    public void setTotal(double total) {
-        this.total = total;
+    public void setSubtotal(double subtotal) {
+        this.subTotal = subtotal;
     }
 }

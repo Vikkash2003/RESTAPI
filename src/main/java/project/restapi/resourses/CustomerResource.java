@@ -8,6 +8,8 @@ import project.restapi.exceptions.InvalidInputException;
 import project.restapi.models.Customer;
 import project.restapi.utills.DataStore;
 
+import java.util.Map;
+
 import static project.restapi.utills.DataStore.author;
 
 @Path("/customers")
@@ -41,6 +43,14 @@ public class CustomerResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCustomers() {
+        if (DataStore.customer.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of(
+                            "message", "No customers found in the system",
+                            "statusCode", 404
+                    ))
+                    .build();
+        }
         return Response.ok(DataStore.customer.values()).build();
     }
 
@@ -81,7 +91,12 @@ public class CustomerResource {
             throw new CustomerNotFoundException(id);
         }
 
-        Customer removedCustomer = DataStore.customer.remove(id);
-        return Response.ok(removedCustomer).build();
+        DataStore.customer.remove(id);
+        return Response.ok()
+                .entity(Map.of(
+                        "message", "Customer with ID: " + id + " deleted successfully",
+                        "statusCode", 200
+                ))
+                .build();
     }
 }
